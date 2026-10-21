@@ -22,13 +22,22 @@ supabase = init_supabase()
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
     <style>
-    /* 1. Estilo para el panel lateral completo */
+    /* 1. Ocultar menús de desarrollo y gestión de Streamlit (Share, GitHub, Manage App, etc.) */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stHeader"] {display: none;}
+    [data-testid="stToolbar"] {display: none;}
+    div[class^="viewerBadge"] {display: none;}
+    .stAppDeployButton {display: none;}
+
+    /* 2. Estilo para el panel lateral completo */
     [data-testid="stSidebar"] {
         background-color: #1E232A !important;
         border-right: 1px solid #2D3748;
     }
 
-    /* 2. Formato del título de sección en el menú */
+    /* 3. Formato del título de sección en el menú */
     .sidebar-header {
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -39,7 +48,7 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* 3. Aumentar tamaño y espacio de las opciones del menú */
+    /* 4. Aumentar tamaño y espacio de las opciones del menú */
     [data-testid="stSidebar"] .stRadio label {
         font-size: 17px !important;
         font-weight: 500 !important;
@@ -49,7 +58,7 @@ st.markdown("""
         transition: all 0.2s ease;
     }
 
-    /* 4. Tarjeta de información institucional en la barra lateral */
+    /* 5. Tarjeta de información institucional en la barra lateral */
     .sidebar-footer {
         background-color: #14171D;
         padding: 12px;
