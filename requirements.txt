@@ -3,3 +3,7 @@ pandas
 streamlit
 pandas
 supabase
+streamlit
+pandas
+supabase
+fpdf2
