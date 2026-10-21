@@ -8,41 +8,7 @@ CLAVE_TRABAJADORES = "trabajador123"
 CLAVE_DIRECTIVOS = "direccion2026"
 
 # Configuración de la página
-st.set_page_config(page_title="Desarrollo Social", page_icon="📋", layout="wide")
-
-# --- LOGO EN EL ENCABEZADO PRINCIPAL ---
-# Ajusta 'width=350' si deseas que el logo se vea un poco más grande o más pequeño
-st.image("logoloreto.jpeg", width=350)
-
-# --- ESTILOS CSS PERSONALIZADOS ---
-st.markdown("""
-    <style>
-    /* 1. Aumentar tamaño de letra en el Menú Lateral (Sidebar) */
-    [data-testid="stSidebar"] label {
-        font-size: 20px !important;
-        font-weight: bold !important;
-    }
-    
-    [data-testid="stSidebar"] p {
-        font-size: 18px !important;
-    }
-
-    /* 2. Aumentar tamaño de letra de las etiquetas de contraseña/entradas de texto */
-    div[data-baseweb="input"] label, 
-    .stTextInput label {
-        font-size: 19px !important;
-        font-weight: 600 !important;
-        color: #E0E0E0 !important;
-    }
-
-    /* 3. Aumentar tamaño del texto ingresado dentro del campo */
-    input {
-        font-size: 18px !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-st.title("📋 Sistema de Gestión - Desarrollo Social")
+st.set_page_config(page_title="Desarrollo Social - Loreto", page_icon="📋", layout="wide")
 
 # --- CONEXIÓN A SUPABASE ---
 @st.cache_resource
@@ -53,13 +19,85 @@ def init_supabase() -> Client:
 
 supabase = init_supabase()
 
-# Menú principal
-opcion = st.sidebar.radio("Navegación", ["1. Cargar Ayuda", "2. Consultar por DNI"])
+# --- ESTILOS CSS PERSONALIZADOS ---
+st.markdown("""
+    <style>
+    /* 1. Estilo para el panel lateral completo */
+    [data-testid="stSidebar"] {
+        background-color: #1E232A !important;
+        border-right: 1px solid #2D3748;
+    }
+
+    /* 2. Formato del título de sección en el menú */
+    .sidebar-header {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #A0AEC0 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+
+    /* 3. Aumentar tamaño y espacio de las opciones del menú */
+    [data-testid="stSidebar"] .stRadio label {
+        font-size: 17px !important;
+        font-weight: 500 !important;
+        color: #E2E8F0 !important;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    /* 4. Tarjeta de información institucional en la barra lateral */
+    .sidebar-footer {
+        background-color: #14171D;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #2D3748;
+        font-size: 12px;
+        color: #A0AEC0;
+        margin-top: 40px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- LOGO CENTRADO EN ENCABEZADO PRINCIPAL ---
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image("logoloreto.jpeg", use_container_width=True)
+
+st.title("📋 Sistema de Gestión - Desarrollo Social")
+
+# --- BARRA LATERAL PROFESIONAL ---
+with st.sidebar:
+    st.markdown('<p class="sidebar-header">MENÚ DE NAVEGACIÓN</p>', unsafe_allow_html=True)
+    
+    opcion = st.radio(
+        label="",
+        options=[
+            "✍️ Cargar Ayuda Directa", 
+            "🔍 Consultar Historial (DNI)"
+        ],
+        index=0
+    )
+    
+    st.markdown("---")
+    
+    # Tarjeta informativa fija
+    st.markdown("""
+        <div class="sidebar-footer">
+            <strong>Municipalidad de Loreto</strong><br>
+            Secretaría de Desarrollo Social<br><br>
+            🟢 <strong>Base de datos:</strong> Conectada<br>
+            🔒 <strong>Acceso:</strong> Seguro (Encriptado)
+        </div>
+    """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # 1. MÓDULO: CARGA DE AYUDAS (ACCESO TRABAJADORES)
 # ---------------------------------------------------------
-if opcion == "1. Cargar Ayuda":
+if opcion == "✍️ Cargar Ayuda Directa":
     st.subheader("✍️ Registro de Beneficiario y Entrega")
     
     pass_carga = st.text_input("Ingrese la contraseña de Operador/Trabajador:", type="password", key="pass_carga")
@@ -94,7 +132,6 @@ if opcion == "1. Cargar Ayuda":
                 if not dni or not nombre or not apellido:
                     st.error("Por favor completa al menos DNI, Nombre y Apellido.")
                 else:
-                    # Upsert persona (insertar o actualizar si ya existe DNI)
                     supabase.table("personas").upsert({
                         "dni": dni,
                         "nombre": nombre,
@@ -102,7 +139,6 @@ if opcion == "1. Cargar Ayuda":
                         "direccion": direccion
                     }).execute()
                     
-                    # Registrar entrega
                     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M")
                     supabase.table("entregas").insert({
                         "dni_persona": dni,
@@ -119,7 +155,7 @@ if opcion == "1. Cargar Ayuda":
 # ---------------------------------------------------------
 # 2. MÓDULO: CONSULTA POR DNI (ACCESO DIRECTIVOS)
 # ---------------------------------------------------------
-elif opcion == "2. Consultar por DNI":
+elif opcion == "🔍 Consultar Historial (DNI)":
     st.subheader("🔒 Consulta de Historial (Exclusivo Directivos)")
     
     pass_consulta = st.text_input("Ingrese la contraseña de Directivo:", type="password", key="pass_consulta")
@@ -131,14 +167,12 @@ elif opcion == "2. Consultar por DNI":
         
         if st.button("Buscar Historial") or dni_buscar:
             if dni_buscar:
-                # Consultar datos de la persona
                 resp_persona = supabase.table("personas").select("*").eq("dni", dni_buscar).execute()
                 
                 if resp_persona.data:
                     persona = resp_persona.data[0]
                     st.info(f"**Beneficiario:** {persona['apellido']}, {persona['nombre']} | **Domicilio:** {persona['direccion']}")
                     
-                    # Consultar entregas
                     resp_entregas = supabase.table("entregas").select("fecha, tipo_ayuda, descripcion").eq("dni_persona", dni_buscar).order("id", desc=True).execute()
                     
                     if resp_entregas.data:
