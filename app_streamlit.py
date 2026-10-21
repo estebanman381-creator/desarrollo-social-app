@@ -3,7 +3,6 @@ from datetime import datetime
 import pandas as pd
 from supabase import create_client, Client
 from fpdf import FPDF
-import io
 
 # --- CONFIGURACIÓN DE CONTRASEÑAS ---
 CLAVE_TRABAJADORES = "trabajador123"
@@ -64,30 +63,30 @@ st.markdown("""
     #MainMenu { visibility: hidden !important; display: none !important; }
     div[class^="viewerBadge"] { display: none !important; }
 
-    /* 2. Mantener la barra superior transparente pero con la flecha activa */
-    header[data-testid="stHeader"] {
-        background-color: transparent !important;
-        pointer-events: none !important;
-    }
-
-    /* 3. Forzar visibilidad y funcionalidad del botón de abrir/cerrar sidebar */
-    [data-testid="stSidebarCollapsedControl"],
-    button[aria-label="Expand sidebar"],
-    button[aria-label="Collapse sidebar"],
-    [data-testid="stSidebarCollapseButton"] {
-        display: flex !important;
+    /* 2. MANTENER LA FLECHA DE APERTURA SIEMPRE VISIBLE Y FUNCIONAL */
+    [data-testid="stSidebarCollapsedControl"] {
+        display: block !important;
         visibility: visible !important;
-        pointer-events: auto !important;
+        position: fixed !important;
+        top: 15px !important;
+        left: 15px !important;
         z-index: 9999999 !important;
     }
 
-    /* 4. Estilo para el panel lateral completo */
+    [data-testid="stSidebarCollapsedControl"] button {
+        background-color: #1E232A !important;
+        border: 1px solid #4A5568 !important;
+        color: #FFFFFF !important;
+        border-radius: 8px !important;
+    }
+
+    /* 3. Estilo para el panel lateral completo */
     [data-testid="stSidebar"] {
         background-color: #1E232A !important;
         border-right: 1px solid #2D3748;
     }
 
-    /* 5. Formato del título de sección en el menú */
+    /* 4. Formato del título de sección en el menú */
     .sidebar-header {
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -98,7 +97,7 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* 6. Aumentar tamaño y espacio de las opciones del menú */
+    /* 5. Aumentar tamaño y espacio de las opciones del menú */
     [data-testid="stSidebar"] .stRadio label {
         font-size: 17px !important;
         font-weight: 500 !important;
@@ -107,7 +106,7 @@ st.markdown("""
         border-radius: 6px;
     }
 
-    /* 7. Tarjeta de información institucional en la barra lateral */
+    /* 6. Tarjeta de información institucional en la barra lateral */
     .sidebar-footer {
         background-color: #14171D;
         padding: 12px;
@@ -162,6 +161,10 @@ if opcion == "✍️ Cargar Ayuda Directa":
     if pass_carga == CLAVE_TRABAJADORES:
         st.success("Acceso concedido para carga de datos")
         
+        # Variables para controlar la descarga fuera del formulario
+        if "mostrar_pdf" not in st.session_state:
+            st.session_state.mostrar_pdf = False
+
         with st.form("form_carga", clear_on_submit=False):
             col_op1, col_op2 = st.columns(2)
             with col_op1:
@@ -193,6 +196,7 @@ if opcion == "✍️ Cargar Ayuda Directa":
             if guardar:
                 if not dni or not nombre or not apellido or not operador:
                     st.error("Por favor completa los campos obligatorios: Operador, DNI, Nombre y Apellido.")
+                    st.session_state.mostrar_pdf = False
                 else:
                     supabase.table("personas").upsert({
                         "dni": dni,
@@ -212,13 +216,19 @@ if opcion == "✍️ Cargar Ayuda Directa":
                     
                     st.success(f"¡Registro guardado correctamente para el DNI {dni}!")
                     
-                    pdf_bytes = generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha_actual, operador)
-                    st.download_button(
-                        label="📄 Descargar Comprobante PDF",
-                        data=pdf_bytes,
-                        file_name=f"comprobante_{dni}_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
-                        mime="application/pdf"
-                    )
+                    # Guardar datos en session_state para renderizar el PDF fuera del form
+                    st.session_state.pdf_bytes = generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha_actual, operador)
+                    st.session_state.pdf_dni = dni
+                    st.session_state.mostrar_pdf = True
+
+        # Renderizar el botón de descarga FUERA del formulario
+        if st.session_state.get("mostrar_pdf", False):
+            st.download_button(
+                label="📄 Descargar Comprobante PDF",
+                data=st.session_state.pdf_bytes,
+                file_name=f"comprobante_{st.session_state.pdf_dni}_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+                mime="application/pdf"
+            )
                     
     elif pass_carga != "":
         st.error("Contraseña incorrecta.")
