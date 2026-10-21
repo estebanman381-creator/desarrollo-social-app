@@ -71,60 +71,73 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. FLECHA VISIBLE ARRIBA A LA IZQUIERDA PARA DESPLEGAR EL SIDEBAR */
-    [data-testid="stSidebarCollapsedControl"] {
-        display: flex !important;
+    /* 2. BARRA LATERAL FIJA Y PERMANENTE */
+    section[data-testid="stSidebar"] {
+        display: block !important;
         visibility: visible !important;
-        position: fixed !important;
-        top: 12px !important;
-        left: 12px !important;
-        z-index: 9999999 !important;
-        background-color: #0F172A !important;
-        border: 1px solid #334155 !important;
-        border-radius: 8px !important;
-        padding: 4px !important;
-    }
-
-    [data-testid="stSidebarCollapsedControl"] button,
-    [data-testid="stSidebarCollapsedControl"] svg {
-        fill: #FFFFFF !important;
-        color: #FFFFFF !important;
-    }
-
-    /* 3. FONDO PRINCIPAL Y BARRA LATERAL */
-    .stApp {
-        background-color: #F8FAFC !important;
-    }
-
-    [data-testid="stSidebar"] {
+        width: 320px !important;
+        transform: none !important;
+        margin-left: 0 !important;
         background-color: #0F172A !important;
         border-right: 1px solid #1E293B;
     }
 
-    /* 4. TIPOGRAFÍA Y TAMAÑO DE ETIQUETAS (MUCHO MÁS GRANDES Y NEGRITAS) */
+    [data-testid="stSidebarCollapsedControl"],
+    button[aria-label="Collapse sidebar"],
+    button[aria-label="Close sidebar"],
+    button[aria-label="Expand sidebar"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 3. FONDO CELESTE/AZUL CLARO INSTITUCIONAL */
+    .stApp {
+        background-color: #EBF8FF !important;
+    }
+
+    /* 4. AGRANDAR TIPOGRAFÍA Y AUMENTAR LEGIBILIDAD */
+    html, body, [class*="css"], p, span, div {
+        font-size: 17px !important;
+        color: #0F172A !important;
+    }
+
+    /* Títulos principales y subtítulos */
+    h1 {
+        font-size: 32px !important;
+        font-weight: 800 !important;
+        color: #0F172A !important;
+    }
+
+    h2, h3, .stSubheader {
+        font-size: 24px !important;
+        font-weight: 700 !important;
+        color: #0F172A !important;
+    }
+
+    /* Etiquetas de cajas de texto y campos de selección */
     [data-testid="stWidgetLabel"] label,
     .stTextInput label,
     .stSelectbox label {
-        font-size: 18px !important;
+        font-size: 19px !important;
         font-weight: 800 !important;
         color: #0F172A !important;
         margin-bottom: 8px !important;
     }
 
-    /* Estilo claro para los campos de entrada de texto */
+    /* Inputs y áreas donde se escribe */
     div[data-baseweb="input"] {
         background-color: #FFFFFF !important;
-        border: 2px solid #CBD5E1 !important;
+        border: 2px solid #90CDF4 !important;
         border-radius: 8px !important;
     }
 
     div[data-baseweb="input"] input {
         color: #0F172A !important;
-        font-size: 16px !important;
+        font-size: 17px !important;
         background-color: #FFFFFF !important;
     }
 
-    /* 5. TEXTO EN BARRA LATERAL */
+    /* 5. TEXTOS EN BARRA LATERAL (AZUL SLATE PROFUNDO) */
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] p,
@@ -133,8 +146,8 @@ st.markdown("""
     }
 
     .sidebar-header {
-        font-size: 12px !important;
-        font-weight: 700 !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
         color: #94A3B8 !important;
         text-transform: uppercase;
         letter-spacing: 1.2px;
@@ -143,38 +156,34 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] .stRadio label {
-        font-size: 16px !important;
-        font-weight: 500 !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
         padding: 10px 14px;
         border-radius: 8px;
     }
 
     .sidebar-footer {
         background-color: #1E293B;
-        padding: 14px;
+        padding: 16px;
         border-radius: 8px;
         border: 1px solid #334155;
-        font-size: 12px;
+        font-size: 14px !important;
         color: #CBD5E1 !important;
         margin-top: 40px;
     }
 
     .sidebar-footer * {
         color: #CBD5E1 !important;
+        font-size: 14px !important;
     }
 
-    /* 6. ESTILO DE FORMULARIOS */
+    /* 6. ESTILO DE FORMULARIOS Y CONTENEDORES */
     div[data-testid="stForm"] {
         background-color: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
+        border: 1px solid #BEE3F8 !important;
         border-radius: 12px !important;
-        padding: 24px !important;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
-    }
-
-    h1, h2, h3, .stSubheader {
-        color: #0F172A !important;
-        font-weight: 700 !important;
+        padding: 28px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -186,7 +195,7 @@ with col2:
 
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
-# --- BARRA LATERAL ---
+# --- BARRA LATERAL FIJA ---
 with st.sidebar:
     st.markdown('<p class="sidebar-header">MENÚ DE NAVEGACIÓN</p>', unsafe_allow_html=True)
     
