@@ -12,7 +12,7 @@ st.set_page_config(page_title="Desarrollo Social", page_icon="📋", layout="wid
 
 # --- MOSTRAR LOGO ---
 # Si quieres que aparezca en el panel lateral arriba de todo:
-st.sidebar.image("WhatsApp Image 2026-10-21 at 11.47.12 AM.jpeg", use_container_width=True)
+st.sidebar.image("logoloreto.jpeg", use_container_width=True)
 
 # (Opcional) Si prefieres que aparezca arriba en el centro antes del título,
 # usa esta línea en lugar de la anterior:
