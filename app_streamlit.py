@@ -71,7 +71,14 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. OCULTAR BOTÓN DE COLAPSAR SIDEBAR (PANEL LATERAL FIJO) */
+    /* 2. FORZAR LA BARRA LATERAL VISIBLE Y OCULTAR BOTÓN DE COLAPSAR */
+    [data-testid="stSidebar"] {
+        display: block !important;
+        visibility: visible !important;
+        background-color: #0F172A !important;
+        border-right: 1px solid #1E293B;
+    }
+
     [data-testid="stSidebarCollapsedControl"],
     button[aria-label="Collapse sidebar"],
     button[aria-label="Expand sidebar"] {
@@ -79,16 +86,41 @@ st.markdown("""
         visibility: hidden !important;
     }
 
-    /* 3. FONDO PRINCIPAL MODERNO Y AMIGABLE */
+    /* 3. FONDO PRINCIPAL MODERNO */
     .stApp {
         background-color: #F8FAFC !important;
-        color: #1E293B !important;
     }
 
-    /* 4. PALETA AZUL SLATE PROFUNDO PARA LA BARRA LATERAL */
-    [data-testid="stSidebar"] {
-        background-color: #0F172A !important;
-        border-right: 1px solid #1E293B;
+    /* 4. CORRECCIÓN DE ETIQUETAS, CAMPOS DE TEXTO Y CONTRASTE DE LETRAS */
+    label, p, span, div {
+        color: #0F172A !important;
+    }
+
+    /* Aumentar tamaño y legibilidad del texto "Ingrese la contraseña..." y etiquetas de inputs */
+    [data-testid="stWidgetLabel"] label, 
+    div[class*="stTextInput"] label,
+    div[class*="stSelectbox"] label {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #1E293B !important;
+        margin-bottom: 6px !important;
+    }
+
+    /* Ajustar el interior de las cajas de texto e inputs */
+    div[data-baseweb="input"] input {
+        color: #0F172A !important;
+        background-color: #FFFFFF !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        font-size: 15px !important;
+    }
+
+    /* 5. TEXTO EN BARRA LATERAL (MANTENER BLANCO/GRIS CLARO) */
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] div {
+        color: #F1F5F9 !important;
     }
 
     .sidebar-header {
@@ -104,14 +136,8 @@ st.markdown("""
     [data-testid="stSidebar"] .stRadio label {
         font-size: 16px !important;
         font-weight: 500 !important;
-        color: #F1F5F9 !important;
         padding: 10px 14px;
         border-radius: 8px;
-        transition: all 0.2s ease;
-    }
-
-    [data-testid="stSidebar"] .stRadio label:hover {
-        background-color: #1E293B !important;
     }
 
     .sidebar-footer {
@@ -120,11 +146,15 @@ st.markdown("""
         border-radius: 8px;
         border: 1px solid #334155;
         font-size: 12px;
-        color: #CBD5E1;
+        color: #CBD5E1 !important;
         margin-top: 40px;
     }
 
-    /* 5. TARJETAS Y CONTENEDORES CON ESTILO MODERNO */
+    .sidebar-footer * {
+        color: #CBD5E1 !important;
+    }
+
+    /* 6. TARJETAS Y CONTENEDORES CON SOMBRA SUAVE */
     div[data-testid="stForm"] {
         background-color: #FFFFFF !important;
         border: 1px solid #E2E8F0 !important;
@@ -133,14 +163,9 @@ st.markdown("""
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Estilo para títulos e inputs */
     h1, h2, h3, .stSubheader {
         color: #0F172A !important;
         font-weight: 700 !important;
-    }
-
-    div[data-baseweb="input"] {
-        border-radius: 8px !important;
     }
     </style>
 """, unsafe_allow_html=True)
