@@ -71,51 +71,60 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. FORZAR LA BARRA LATERAL VISIBLE Y OCULTAR BOTÓN DE COLAPSAR */
-    [data-testid="stSidebar"] {
-        display: block !important;
+    /* 2. FLECHA VISIBLE ARRIBA A LA IZQUIERDA PARA DESPLEGAR EL SIDEBAR */
+    [data-testid="stSidebarCollapsedControl"] {
+        display: flex !important;
         visibility: visible !important;
+        position: fixed !important;
+        top: 12px !important;
+        left: 12px !important;
+        z-index: 9999999 !important;
         background-color: #0F172A !important;
-        border-right: 1px solid #1E293B;
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+        padding: 4px !important;
     }
 
-    [data-testid="stSidebarCollapsedControl"],
-    button[aria-label="Collapse sidebar"],
-    button[aria-label="Expand sidebar"] {
-        display: none !important;
-        visibility: hidden !important;
+    [data-testid="stSidebarCollapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] svg {
+        fill: #FFFFFF !important;
+        color: #FFFFFF !important;
     }
 
-    /* 3. FONDO PRINCIPAL MODERNO */
+    /* 3. FONDO PRINCIPAL Y BARRA LATERAL */
     .stApp {
         background-color: #F8FAFC !important;
     }
 
-    /* 4. CORRECCIÓN DE ETIQUETAS, CAMPOS DE TEXTO Y CONTRASTE DE LETRAS */
-    label, p, span, div {
+    [data-testid="stSidebar"] {
+        background-color: #0F172A !important;
+        border-right: 1px solid #1E293B;
+    }
+
+    /* 4. TIPOGRAFÍA Y TAMAÑO DE ETIQUETAS (MUCHO MÁS GRANDES Y NEGRITAS) */
+    [data-testid="stWidgetLabel"] label,
+    .stTextInput label,
+    .stSelectbox label {
+        font-size: 18px !important;
+        font-weight: 800 !important;
         color: #0F172A !important;
+        margin-bottom: 8px !important;
     }
 
-    /* Aumentar tamaño y legibilidad del texto "Ingrese la contraseña..." y etiquetas de inputs */
-    [data-testid="stWidgetLabel"] label, 
-    div[class*="stTextInput"] label,
-    div[class*="stSelectbox"] label {
-        font-size: 16px !important;
-        font-weight: 700 !important;
-        color: #1E293B !important;
-        margin-bottom: 6px !important;
+    /* Estilo claro para los campos de entrada de texto */
+    div[data-baseweb="input"] {
+        background-color: #FFFFFF !important;
+        border: 2px solid #CBD5E1 !important;
+        border-radius: 8px !important;
     }
 
-    /* Ajustar el interior de las cajas de texto e inputs */
     div[data-baseweb="input"] input {
         color: #0F172A !important;
+        font-size: 16px !important;
         background-color: #FFFFFF !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-        font-size: 15px !important;
     }
 
-    /* 5. TEXTO EN BARRA LATERAL (MANTENER BLANCO/GRIS CLARO) */
+    /* 5. TEXTO EN BARRA LATERAL */
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] span,
     [data-testid="stSidebar"] p,
@@ -154,7 +163,7 @@ st.markdown("""
         color: #CBD5E1 !important;
     }
 
-    /* 6. TARJETAS Y CONTENEDORES CON SOMBRA SUAVE */
+    /* 6. ESTILO DE FORMULARIOS */
     div[data-testid="stForm"] {
         background-color: #FFFFFF !important;
         border: 1px solid #E2E8F0 !important;
@@ -177,7 +186,7 @@ with col2:
 
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
-# --- BARRA LATERAL FIJA ---
+# --- BARRA LATERAL ---
 with st.sidebar:
     st.markdown('<p class="sidebar-header">MENÚ DE NAVEGACIÓN</p>', unsafe_allow_html=True)
     
