@@ -52,61 +52,42 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
     pdf.cell(0, 7, "______________________________", ln=True, align='C')
     pdf.cell(0, 7, "Firma del Beneficiario", ln=True, align='C')
     
-    # Retornar como bytes en memoria
     return bytes(pdf.output())
 
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
     <style>
-    /* 1. Ocultar la barra de herramientas derecha (GitHub, Share, Deploy, 3 puntos) sin ocultar el Header */
-    [data-testid="stToolbar"] {
-        visibility: hidden !important;
-        display: none !important;
-    }
+    /* 1. Ocultar menús de desarrollo y herramientas derechas */
+    [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
+    footer { visibility: hidden !important; display: none !important; }
+    .stAppDeployButton { display: none !important; }
+    #MainMenu { visibility: hidden !important; display: none !important; }
+    div[class^="viewerBadge"] { display: none !important; }
 
-    /* Ocultar el pie de página ("Manage app" / Made with Streamlit) */
-    footer {
-        visibility: hidden !important;
-        display: none !important;
-    }
-
-    .stAppDeployButton {
-        display: none !important;
-    }
-
-    #MainMenu {
-        visibility: hidden !important;
-    }
-
-    div[class^="viewerBadge"] {
-        display: none !important;
-    }
-
-    /* 2. Asegurar que el botón de colapsar/expandir el Sidebar permanezca visible y presionable */
+    /* 2. Mantener la barra superior transparente pero con la flecha activa */
     header[data-testid="stHeader"] {
-        background: transparent !important;
+        background-color: transparent !important;
+        pointer-events: none !important;
     }
 
-    [data-testid="stSidebarCollapsedControl"] {
+    /* 3. Forzar visibilidad y funcionalidad del botón de abrir/cerrar sidebar */
+    [data-testid="stSidebarCollapsedControl"],
+    button[aria-label="Expand sidebar"],
+    button[aria-label="Collapse sidebar"],
+    [data-testid="stSidebarCollapseButton"] {
         display: flex !important;
         visibility: visible !important;
-        z-index: 999999 !important;
+        pointer-events: auto !important;
+        z-index: 9999999 !important;
     }
 
-    [data-testid="stSidebarCollapsedControl"] button {
-        background-color: #1E232A !important;
-        color: #FFFFFF !important;
-        border: 1px solid #2D3748 !important;
-        border-radius: 6px !important;
-    }
-
-    /* 3. Estilo para el panel lateral completo */
+    /* 4. Estilo para el panel lateral completo */
     [data-testid="stSidebar"] {
         background-color: #1E232A !important;
         border-right: 1px solid #2D3748;
     }
 
-    /* 4. Formato del título de sección en el menú */
+    /* 5. Formato del título de sección en el menú */
     .sidebar-header {
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -117,7 +98,7 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* 5. Aumentar tamaño y espacio de las opciones del menú */
+    /* 6. Aumentar tamaño y espacio de las opciones del menú */
     [data-testid="stSidebar"] .stRadio label {
         font-size: 17px !important;
         font-weight: 500 !important;
@@ -126,7 +107,7 @@ st.markdown("""
         border-radius: 6px;
     }
 
-    /* 6. Tarjeta de información institucional en la barra lateral */
+    /* 7. Tarjeta de información institucional en la barra lateral */
     .sidebar-footer {
         background-color: #14171D;
         padding: 12px;
@@ -213,7 +194,6 @@ if opcion == "✍️ Cargar Ayuda Directa":
                 if not dni or not nombre or not apellido or not operador:
                     st.error("Por favor completa los campos obligatorios: Operador, DNI, Nombre y Apellido.")
                 else:
-                    # Guardar Persona
                     supabase.table("personas").upsert({
                         "dni": dni,
                         "nombre": nombre,
@@ -221,7 +201,6 @@ if opcion == "✍️ Cargar Ayuda Directa":
                         "direccion": direccion
                     }).execute()
                     
-                    # Registrar Entrega con Operador
                     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M")
                     supabase.table("entregas").insert({
                         "dni_persona": dni,
@@ -233,7 +212,6 @@ if opcion == "✍️ Cargar Ayuda Directa":
                     
                     st.success(f"¡Registro guardado correctamente para el DNI {dni}!")
                     
-                    # Generar PDF para descarga inmediata
                     pdf_bytes = generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha_actual, operador)
                     st.download_button(
                         label="📄 Descargar Comprobante PDF",
@@ -296,7 +274,6 @@ elif opcion == "📊 Dashboard & Estadísticas":
     if pass_dash == CLAVE_DIRECTIVOS:
         st.success("Acceso concedido a Métricas")
         
-        # Cargar todas las entregas
         resp = supabase.table("entregas").select("*").execute()
         
         if resp.data:
@@ -306,13 +283,11 @@ elif opcion == "📊 Dashboard & Estadísticas":
             df['Mes_Num'] = df['fecha_dt'].dt.month
             df['Año_Mes'] = df['fecha_dt'].dt.strftime('%Y-%m')
             
-            # Filtros superiores
             col_f1, col_f2 = st.columns(2)
             with col_f1:
                 anios_disponibles = sorted(df['Año'].dropna().unique().astype(int).tolist(), reverse=True)
                 anio_sel = st.selectbox("Seleccionar Año:", anios_disponibles)
             
-            # Métricas rápidas
             df_filtrado_anio = df[df['Año'] == anio_sel]
             
             st.markdown("---")
@@ -322,14 +297,12 @@ elif opcion == "📊 Dashboard & Estadísticas":
             m3.metric("Tipos de Ayuda Distintos", df_filtrado_anio['tipo_ayuda'].nunique())
             st.markdown("---")
             
-            # Tabla mensual
             st.write(f"### Total de Ayudas Entregadas por Mes en {anio_sel}")
             resumen_mensual = df_filtrado_anio.groupby('Año_Mes').size().reset_index(name='Cantidad de Entregas')
             resumen_mensual.rename(columns={'Año_Mes': 'Mes (Año-Mes)'}, inplace=True)
             st.bar_chart(resumen_mensual.set_index('Mes (Año-Mes)'))
             st.dataframe(resumen_mensual, use_container_width=True)
             
-            # Desglose por tipo de ayuda
             st.write("### Desglose por Tipo de Ayuda")
             resumen_tipo = df_filtrado_anio.groupby('tipo_ayuda').size().reset_index(name='Total Entregado')
             st.dataframe(resumen_tipo, use_container_width=True)
