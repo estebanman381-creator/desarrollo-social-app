@@ -56,42 +56,47 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
     <style>
-    /* 1. Ocultar herramientas derechas y footers */
+    /* 1. OCULTAR BARRA SUPERIOR DERECHA Y ELEMENTOS FLOTANTES DEL FOOTER */
     [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
     footer { visibility: hidden !important; display: none !important; }
     .stAppDeployButton { display: none !important; }
     #MainMenu { visibility: hidden !important; display: none !important; }
     div[class^="viewerBadge"] { display: none !important; }
+    [data-testid="stStatusWidget"] { display: none !important; }
     
-    /* Ocultar el marco del botón Manage App si estuvieras en modo invitado */
-    [data-testid="stStatusWidget"] { visibility: hidden !important; display: none !important; }
+    /* Ocultar el badge flotante de Streamlit en la esquina inferior derecha */
+    .stApp > header { background-color: transparent !important; }
+    iframe[title="streamlit_badge"] { display: none !important; }
+    div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. MANTENER EL HEADER Y LA FLECHA VISIBLES */
-    header[data-testid="stHeader"] {
-        background-color: transparent !important;
-        z-index: 99999 !important;
-    }
-
-    /* Estilo del botón de la flecha (Sidebar) */
-    [data-testid="stSidebarCollapsedControl"],
-    button[aria-label="Expand sidebar"],
-    button[aria-label="Collapse sidebar"],
-    [data-testid="stSidebarCollapseButton"] {
+    /* 2. FLECHA FLOTANTE PERMANENTE (Arriba a la izquierda) */
+    /* Mantiene el contenedor del botón de apertura fijo en la pantalla cuando el sidebar está cerrado */
+    [data-testid="stSidebarCollapsedControl"] {
         display: flex !important;
         visibility: visible !important;
+        position: fixed !important;
+        top: 12px !important;
+        left: 12px !important;
+        z-index: 9999999 !important;
         background-color: #1E232A !important;
         border: 1px solid #4A5568 !important;
-        border-radius: 6px !important;
-        color: #FFFFFF !important;
+        border-radius: 8px !important;
+        padding: 4px !important;
     }
 
-    /* 3. Estilo para el panel lateral completo */
+    [data-testid="stSidebarCollapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] span {
+        color: #FFFFFF !important;
+        visibility: visible !important;
+    }
+
+    /* 3. ESTILO PANEL LATERAL */
     [data-testid="stSidebar"] {
         background-color: #1E232A !important;
         border-right: 1px solid #2D3748;
     }
 
-    /* 4. Formato del título de sección en el menú */
+    /* 4. TÍTULOS Y OPCIONES DEL MENÚ */
     .sidebar-header {
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -102,7 +107,6 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* 5. Aumentar tamaño y espacio de las opciones del menú */
     [data-testid="stSidebar"] .stRadio label {
         font-size: 17px !important;
         font-weight: 500 !important;
@@ -111,7 +115,7 @@ st.markdown("""
         border-radius: 6px;
     }
 
-    /* 6. Tarjeta de información institucional en la barra lateral */
+    /* 5. TARJETA INFORMATIVA */
     .sidebar-footer {
         background-color: #14171D;
         padding: 12px;
