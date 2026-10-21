@@ -56,28 +56,33 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
     <style>
-    /* 1. Ocultar menús de desarrollo y herramientas derechas */
+    /* 1. Ocultar herramientas derechas y footers */
     [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
     footer { visibility: hidden !important; display: none !important; }
     .stAppDeployButton { display: none !important; }
     #MainMenu { visibility: hidden !important; display: none !important; }
     div[class^="viewerBadge"] { display: none !important; }
+    
+    /* Ocultar el marco del botón Manage App si estuvieras en modo invitado */
+    [data-testid="stStatusWidget"] { visibility: hidden !important; display: none !important; }
 
-    /* 2. MANTENER LA FLECHA DE APERTURA SIEMPRE VISIBLE Y FUNCIONAL */
-    [data-testid="stSidebarCollapsedControl"] {
-        display: block !important;
-        visibility: visible !important;
-        position: fixed !important;
-        top: 15px !important;
-        left: 15px !important;
-        z-index: 9999999 !important;
+    /* 2. MANTENER EL HEADER Y LA FLECHA VISIBLES */
+    header[data-testid="stHeader"] {
+        background-color: transparent !important;
+        z-index: 99999 !important;
     }
 
-    [data-testid="stSidebarCollapsedControl"] button {
+    /* Estilo del botón de la flecha (Sidebar) */
+    [data-testid="stSidebarCollapsedControl"],
+    button[aria-label="Expand sidebar"],
+    button[aria-label="Collapse sidebar"],
+    [data-testid="stSidebarCollapseButton"] {
+        display: flex !important;
+        visibility: visible !important;
         background-color: #1E232A !important;
         border: 1px solid #4A5568 !important;
+        border-radius: 6px !important;
         color: #FFFFFF !important;
-        border-radius: 8px !important;
     }
 
     /* 3. Estilo para el panel lateral completo */
