@@ -58,26 +58,47 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
     <style>
-    /* 1. Ocultar únicamente los menús de desarrollo/opciones sin romper la flecha del sidebar */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    [data-testid="stToolbar"] {visibility: hidden !important;}
-    .stAppDeployButton {display: none !important;}
-    div[class^="viewerBadge"] {display: none !important;}
-
-    /* Permitir que el botón de desplegar/contraer la barra lateral siga visible */
-    [data-testid="stSidebarCollapseButton"] {
-        visibility: visible !important;
-        display: block !important;
+    /* 1. Mantener visible el encabezado pero transparente para mostrar la flecha */
+    [data-testid="stHeader"] {
+        background-color: transparent !important;
+        z-index: 1000001 !important;
     }
 
-    /* 2. Estilo para el panel lateral completo */
+    /* 2. Ocultar los botones de desarrollo (Share, GitHub, 3 puntos) */
+    [data-testid="stToolbar"] {
+        display: none !important;
+    }
+
+    .stAppDeployButton {
+        display: none !important;
+    }
+
+    #MainMenu {
+        visibility: hidden !important;
+    }
+
+    footer {
+        visibility: hidden !important;
+    }
+
+    /* 3. Forzar visibilidad del botón para desplegar/cerrar el Sidebar */
+    [data-testid="stSidebarCollapsedControl"],
+    button[aria-label="Expand sidebar"],
+    button[aria-label="Collapse sidebar"],
+    [data-testid="stSidebarCollapseButton"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        color: #FFFFFF !important;
+    }
+
+    /* 4. Estilo para el panel lateral completo */
     [data-testid="stSidebar"] {
         background-color: #1E232A !important;
         border-right: 1px solid #2D3748;
     }
 
-    /* 3. Formato del título de sección en el menú */
+    /* 5. Formato del título de sección en el menú */
     .sidebar-header {
         font-size: 13px !important;
         font-weight: 700 !important;
@@ -88,7 +109,7 @@ st.markdown("""
         margin-bottom: 10px;
     }
 
-    /* 4. Aumentar tamaño y espacio de las opciones del menú */
+    /* 6. Aumentar tamaño y espacio de las opciones del menú */
     [data-testid="stSidebar"] .stRadio label {
         font-size: 17px !important;
         font-weight: 500 !important;
@@ -97,7 +118,7 @@ st.markdown("""
         border-radius: 6px;
     }
 
-    /* 5. Tarjeta de información institucional en la barra lateral */
+    /* 7. Tarjeta de información institucional en la barra lateral */
     .sidebar-footer {
         background-color: #14171D;
         padding: 12px;
