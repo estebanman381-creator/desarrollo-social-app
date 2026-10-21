@@ -1,44 +1,25 @@
 import streamlit as st
-import sqlite3
 from datetime import datetime
 import pandas as pd
+from supabase import create_client, Client
 
 # --- CONFIGURACIÓN DE CONTRASEÑAS ---
-# Puedes cambiar estas claves por las que prefieras para tu oficina
-CLAVE_TRABAJADORES = "sdsdatos"
-CLAVE_DIRECTIVOS = "dsloreto"
+CLAVE_TRABAJADORES = "trabajador123"
+CLAVE_DIRECTIVOS = "direccion2026"
 
 # Configuración de la página
 st.set_page_config(page_title="Desarrollo Social", page_icon="📋", layout="wide")
 
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
-# Conexión a Base de Datos
-def conectar_bd():
-    conn = sqlite3.connect("desarrollo_social.db", check_same_thread=False)
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS personas (
-            dni TEXT PRIMARY KEY,
-            nombre TEXT NOT NULL,
-            apellido TEXT NOT NULL,
-            direccion TEXT
-        )
-    """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS entregas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            dni_persona TEXT NOT NULL,
-            fecha TEXT NOT NULL,
-            tipo_ayuda TEXT NOT NULL,
-            descripcion TEXT,
-            FOREIGN KEY (dni_persona) REFERENCES personas (dni)
-        )
-    """)
-    conn.commit()
-    return conn
+# --- CONEXIÓN A SUPABASE ---
+@st.cache_resource
+def init_supabase() -> Client:
+    url = st.secrets["SUPABASE_URL"]
+    key = st.secrets["SUPABASE_KEY"]
+    return create_client(url, key)
 
-conn = conectar_bd()
+supabase = init_supabase()
 
 # Menú principal
 opcion = st.sidebar.radio("Navegación", ["1. Cargar Ayuda", "2. Consultar por DNI"])
@@ -81,23 +62,23 @@ if opcion == "1. Cargar Ayuda":
                 if not dni or not nombre or not apellido:
                     st.error("Por favor completa al menos DNI, Nombre y Apellido.")
                 else:
-                    cursor = conn.cursor()
-                    cursor.execute("""
-                        INSERT INTO personas (dni, nombre, apellido, direccion)
-                        VALUES (?, ?, ?, ?)
-                        ON CONFLICT(dni) DO UPDATE SET
-                            nombre=excluded.nombre,
-                            apellido=excluded.apellido,
-                            direccion=excluded.direccion
-                    """, (dni, nombre, apellido, direccion))
+                    # Upsert persona (insertar o actualizar si ya existe DNI)
+                    supabase.table("personas").upsert({
+                        "dni": dni,
+                        "nombre": nombre,
+                        "apellido": apellido,
+                        "direccion": direccion
+                    }).execute()
                     
+                    # Registrar entrega
                     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M")
-                    cursor.execute("""
-                        INSERT INTO entregas (dni_persona, fecha, tipo_ayuda, descripcion)
-                        VALUES (?, ?, ?, ?)
-                    """, (dni, fecha_actual, tipo_ayuda, descripcion))
+                    supabase.table("entregas").insert({
+                        "dni_persona": dni,
+                        "fecha": fecha_actual,
+                        "tipo_ayuda": tipo_ayuda,
+                        "descripcion": descripcion
+                    }).execute()
                     
-                    conn.commit()
                     st.success(f"¡Registro guardado correctamente para el DNI {dni}!")
                     
     elif pass_carga != "":
@@ -118,17 +99,23 @@ elif opcion == "2. Consultar por DNI":
         
         if st.button("Buscar Historial") or dni_buscar:
             if dni_buscar:
-                cursor = conn.cursor()
-                cursor.execute("SELECT nombre, apellido, direccion FROM personas WHERE dni = ?", (dni_buscar,))
-                persona = cursor.fetchone()
+                # Consultar datos de la persona
+                resp_persona = supabase.table("personas").select("*").eq("dni", dni_buscar).execute()
                 
-                if persona:
-                    st.info(f"**Beneficiario:** {persona[1]}, {persona[0]} | **Domicilio:** {persona[2]}")
+                if resp_persona.data:
+                    persona = resp_persona.data[0]
+                    st.info(f"**Beneficiario:** {persona['apellido']}, {persona['nombre']} | **Domicilio:** {persona['direccion']}")
                     
-                    query = "SELECT fecha as 'Fecha y Hora', tipo_ayuda as 'Tipo de Ayuda', descripcion as 'Descripción' FROM entregas WHERE dni_persona = ? ORDER BY id DESC"
-                    df = pd.read_sql_query(query, conn, params=(dni_buscar,))
+                    # Consultar entregas
+                    resp_entregas = supabase.table("entregas").select("fecha, tipo_ayuda, descripcion").eq("dni_persona", dni_buscar).order("id", desc=True).execute()
                     
-                    if not df.empty:
+                    if resp_entregas.data:
+                        df = pd.DataFrame(resp_entregas.data)
+                        df.rename(columns={
+                            'fecha': 'Fecha y Hora',
+                            'tipo_ayuda': 'Tipo de Ayuda',
+                            'descripcion': 'Descripción'
+                        }, inplace=True)
                         st.dataframe(df, use_container_width=True)
                     else:
                         st.warning("El beneficiario existe pero no tiene entregas registradas.")
