@@ -12,7 +12,7 @@ st.set_page_config(page_title="Desarrollo Social", page_icon="📋", layout="wid
 
 # --- LOGO EN EL ENCABEZADO PRINCIPAL ---
 # Ajusta 'width=350' si deseas que el logo se vea un poco más grande o más pequeño
-st.image("logo.jpg", width=350)
+st.image("logoloreto.jpeg", width=350)
 
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
