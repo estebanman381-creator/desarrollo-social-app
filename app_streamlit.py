@@ -10,6 +10,42 @@ CLAVE_DIRECTIVOS = "direccion2026"
 # Configuración de la página
 st.set_page_config(page_title="Desarrollo Social", page_icon="📋", layout="wide")
 
+# --- MOSTRAR LOGO ---
+# Si quieres que aparezca en el panel lateral arriba de todo:
+st.sidebar.image("WhatsApp Image 2026-10-21 at 11.47.12 AM.jpeg", use_container_width=True)
+
+# (Opcional) Si prefieres que aparezca arriba en el centro antes del título,
+# usa esta línea en lugar de la anterior:
+# st.image("logo.png", width=200)
+
+# --- ESTILOS CSS PERSONALIZADOS ---
+st.markdown("""
+    <style>
+    /* 1. Aumentar tamaño de letra en el Menú Lateral (Sidebar) */
+    [data-testid="stSidebar"] label {
+        font-size: 20px !important;
+        font-weight: bold !important;
+    }
+    
+    [data-testid="stSidebar"] p {
+        font-size: 18px !important;
+    }
+
+    /* 2. Aumentar tamaño de letra de las etiquetas de contraseña/entradas de texto */
+    div[data-baseweb="input"] label, 
+    .stTextInput label {
+        font-size: 19px !important;
+        font-weight: 600 !important;
+        color: #E0E0E0 !important;
+    }
+
+    /* 3. Aumentar tamaño del texto ingresado dentro del campo */
+    input {
+        font-size: 18px !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
 # --- CONEXIÓN A SUPABASE ---
