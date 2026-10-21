@@ -8,7 +8,12 @@ from fpdf import FPDF
 CLAVE_TRABAJADORES = "trabajador123"
 CLAVE_DIRECTIVOS = "direccion2026"
 
-st.set_page_config(page_title="Desarrollo Social - Loreto", page_icon="📋", layout="wide")
+st.set_page_config(
+    page_title="Desarrollo Social - Loreto", 
+    page_icon="📋", 
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # --- CONEXIÓN A SUPABASE ---
 @st.cache_resource
@@ -53,77 +58,89 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
     
     return bytes(pdf.output())
 
-# --- ESTILOS CSS PERSONALIZADOS ---
+# --- ESTILOS CSS PERSONALIZADOS Y PALETA INSTITUCIONAL ---
 st.markdown("""
     <style>
-    /* 1. OCULTAR BARRA SUPERIOR DERECHA Y ELEMENTOS FLOTANTES DEL FOOTER */
+    /* 1. OCULTAR HERRAMIENTAS DE DESARROLLO Y ELEMENTOS FLOTANTES */
     [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
     footer { visibility: hidden !important; display: none !important; }
     .stAppDeployButton { display: none !important; }
     #MainMenu { visibility: hidden !important; display: none !important; }
     div[class^="viewerBadge"] { display: none !important; }
     [data-testid="stStatusWidget"] { display: none !important; }
-    
-    /* Ocultar el badge flotante de Streamlit en la esquina inferior derecha */
-    .stApp > header { background-color: transparent !important; }
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. FLECHA FLOTANTE PERMANENTE (Arriba a la izquierda) */
-    /* Mantiene el contenedor del botón de apertura fijo en la pantalla cuando el sidebar está cerrado */
-    [data-testid="stSidebarCollapsedControl"] {
-        display: flex !important;
-        visibility: visible !important;
-        position: fixed !important;
-        top: 12px !important;
-        left: 12px !important;
-        z-index: 9999999 !important;
-        background-color: #1E232A !important;
-        border: 1px solid #4A5568 !important;
-        border-radius: 8px !important;
-        padding: 4px !important;
+    /* 2. OCULTAR BOTÓN DE COLAPSAR SIDEBAR (PANEL LATERAL FIJO) */
+    [data-testid="stSidebarCollapsedControl"],
+    button[aria-label="Collapse sidebar"],
+    button[aria-label="Expand sidebar"] {
+        display: none !important;
+        visibility: hidden !important;
     }
 
-    [data-testid="stSidebarCollapsedControl"] button,
-    [data-testid="stSidebarCollapsedControl"] span {
-        color: #FFFFFF !important;
-        visibility: visible !important;
+    /* 3. FONDO PRINCIPAL MODERNO Y AMIGABLE */
+    .stApp {
+        background-color: #F8FAFC !important;
+        color: #1E293B !important;
     }
 
-    /* 3. ESTILO PANEL LATERAL */
+    /* 4. PALETA AZUL SLATE PROFUNDO PARA LA BARRA LATERAL */
     [data-testid="stSidebar"] {
-        background-color: #1E232A !important;
-        border-right: 1px solid #2D3748;
+        background-color: #0F172A !important;
+        border-right: 1px solid #1E293B;
     }
 
-    /* 4. TÍTULOS Y OPCIONES DEL MENÚ */
     .sidebar-header {
-        font-size: 13px !important;
+        font-size: 12px !important;
         font-weight: 700 !important;
-        color: #A0AEC0 !important;
+        color: #94A3B8 !important;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 15px;
-        margin-bottom: 10px;
+        letter-spacing: 1.2px;
+        margin-top: 20px;
+        margin-bottom: 12px;
     }
 
     [data-testid="stSidebar"] .stRadio label {
-        font-size: 17px !important;
+        font-size: 16px !important;
         font-weight: 500 !important;
-        color: #E2E8F0 !important;
-        padding: 8px 12px;
-        border-radius: 6px;
+        color: #F1F5F9 !important;
+        padding: 10px 14px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
     }
 
-    /* 5. TARJETA INFORMATIVA */
+    [data-testid="stSidebar"] .stRadio label:hover {
+        background-color: #1E293B !important;
+    }
+
     .sidebar-footer {
-        background-color: #14171D;
-        padding: 12px;
+        background-color: #1E293B;
+        padding: 14px;
         border-radius: 8px;
-        border: 1px solid #2D3748;
+        border: 1px solid #334155;
         font-size: 12px;
-        color: #A0AEC0;
+        color: #CBD5E1;
         margin-top: 40px;
+    }
+
+    /* 5. TARJETAS Y CONTENEDORES CON ESTILO MODERNO */
+    div[data-testid="stForm"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        padding: 24px !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Estilo para títulos e inputs */
+    h1, h2, h3, .stSubheader {
+        color: #0F172A !important;
+        font-weight: 700 !important;
+    }
+
+    div[data-baseweb="input"] {
+        border-radius: 8px !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -135,7 +152,7 @@ with col2:
 
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
-# --- BARRA LATERAL ---
+# --- BARRA LATERAL FIJA ---
 with st.sidebar:
     st.markdown('<p class="sidebar-header">MENÚ DE NAVEGACIÓN</p>', unsafe_allow_html=True)
     
@@ -170,7 +187,6 @@ if opcion == "✍️ Cargar Ayuda Directa":
     if pass_carga == CLAVE_TRABAJADORES:
         st.success("Acceso concedido para carga de datos")
         
-        # Variables para controlar la descarga fuera del formulario
         if "mostrar_pdf" not in st.session_state:
             st.session_state.mostrar_pdf = False
 
@@ -225,12 +241,10 @@ if opcion == "✍️ Cargar Ayuda Directa":
                     
                     st.success(f"¡Registro guardado correctamente para el DNI {dni}!")
                     
-                    # Guardar datos en session_state para renderizar el PDF fuera del form
                     st.session_state.pdf_bytes = generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha_actual, operador)
                     st.session_state.pdf_dni = dni
                     st.session_state.mostrar_pdf = True
 
-        # Renderizar el botón de descarga FUERA del formulario
         if st.session_state.get("mostrar_pdf", False):
             st.download_button(
                 label="📄 Descargar Comprobante PDF",
