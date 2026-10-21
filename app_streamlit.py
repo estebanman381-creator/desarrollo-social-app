@@ -10,13 +10,9 @@ CLAVE_DIRECTIVOS = "direccion2026"
 # Configuración de la página
 st.set_page_config(page_title="Desarrollo Social", page_icon="📋", layout="wide")
 
-# --- MOSTRAR LOGO ---
-# Si quieres que aparezca en el panel lateral arriba de todo:
-st.sidebar.image("logoloreto.jpeg", use_container_width=True)
-
-# (Opcional) Si prefieres que aparezca arriba en el centro antes del título,
-# usa esta línea en lugar de la anterior:
-# st.image("logo.png", width=200)
+# --- LOGO EN EL ENCABEZADO PRINCIPAL ---
+# Ajusta 'width=350' si deseas que el logo se vea un poco más grande o más pequeño
+st.image("logo.jpg", width=350)
 
 # --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
