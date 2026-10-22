@@ -5,9 +5,10 @@ from supabase import create_client, Client
 from fpdf import FPDF
 
 # --- CONFIGURACIÓN DE CONTRASEÑAS ---
-CLAVE_TRABAJADORES = "dsdatos"
-CLAVE_DIRECTIVOS = "dsloreto"
+CLAVE_TRABAJADORES = "trabajador123"
+CLAVE_DIRECTIVOS = "direccion2026"
 
+# Configuración inicial del layout y estado de la barra lateral
 st.set_page_config(
     page_title="Desarrollo Social - Loreto", 
     page_icon="📋", 
@@ -58,10 +59,10 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
     
     return bytes(pdf.output())
 
-# --- ESTILOS CSS PERSONALIZADOS ---
+# --- ESTILOS CSS PERSONALIZADOS (TEMA OSCURO PROGRESIVO) ---
 st.markdown("""
     <style>
-    /* 1. OCULTAR HERRAMIENTAS DE DESARROLLO Y ELEMENTOS FLOTANTES */
+    /* 1. OCULTAR ELEMENTOS ADMINISTRATIVOS DE STREAMLIT */
     [data-testid="stToolbar"] { visibility: hidden !important; display: none !important; }
     footer { visibility: hidden !important; display: none !important; }
     .stAppDeployButton { display: none !important; }
@@ -71,130 +72,111 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. FLECHA DE APERTURA SIEMPRE VISIBLE ARRIBA A LA IZQUIERDA */
-    [data-testid="stSidebarCollapsedControl"] {
+    /* 2. FORZAR BARRA LATERAL FIJA Y PERMANENTE (NUNCA SE COLAPSA) */
+    section[data-testid="stSidebar"] {
         display: flex !important;
         visibility: visible !important;
-        position: fixed !important;
-        top: 12px !important;
-        left: 12px !important;
-        z-index: 9999999 !important;
-        background-color: #0F172A !important;
-        border: 1px solid #334155 !important;
-        border-radius: 8px !important;
-        padding: 6px !important;
+        width: 330px !important;
+        min-width: 330px !important;
+        position: relative !important;
+        transform: none !important;
+        margin-left: 0 !important;
+        background-color: #1E232A !important;
+        border-right: 1px solid #2D3748 !important;
     }
 
-    [data-testid="stSidebarCollapsedControl"] button,
-    [data-testid="stSidebarCollapsedControl"] svg {
-        fill: #FFFFFF !important;
+    /* Ocultar cualquier botón para colapsar/cerrar la barra */
+    [data-testid="stSidebarCollapsedControl"],
+    button[aria-label="Collapse sidebar"],
+    button[aria-label="Close sidebar"],
+    button[aria-label="Expand sidebar"] {
+        display: none !important;
+        visibility: hidden !important;
+    }
+
+    /* 3. FONDO OSCURO PRINCIPAL Y TEXTO CLARO EN LA APLICACIÓN */
+    .stApp {
+        background-color: #0E1117 !important;
+        color: #E2E8F0 !important;
+    }
+
+    /* Títulos principales y subtítulos más grandes */
+    h1, .stTitle {
+        font-size: 38px !important;
+        font-weight: 800 !important;
         color: #FFFFFF !important;
     }
 
-    /* 3. FONDO CELESTE MÁS DEFINIDO E INSTITUCIONAL */
-    .stApp {
-        background-color: #DCEEFB !important;
-    }
-
-    /* 4. PALETA AZUL SLATE PROFUNDO PARA LA BARRA LATERAL */
-    section[data-testid="stSidebar"] {
-        background-color: #0F172A !important;
-        border-right: 1px solid #1E293B;
-    }
-
-    /* 5. TIPOGRAFÍA Y TAMAÑO DE FUENTE ENCABEZADOS Y TEXTOS */
-    html, body, p, span, div {
-        font-size: 17px !important;
-        color: #0F172A !important;
-    }
-
-    /* Título principal más grande */
-    h1, .stTitle {
-        font-size: 40px !important;
-        font-weight: 900 !important;
-        color: #0F172A !important;
-        letter-spacing: -0.5px !important;
-    }
-
-    /* Subtítulos más grandes */
     h2, h3, .stSubheader {
-        font-size: 28px !important;
-        font-weight: 800 !important;
-        color: #0F172A !important;
-        margin-top: 15px !important;
-        margin-bottom: 15px !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+        color: #F7FAFC !important;
     }
 
-    /* Etiquetas de los formularios (Ingrese la contraseña...) */
+    /* Etiquetas de los campos (Ingrese la contraseña...) */
     [data-testid="stWidgetLabel"] label,
     .stTextInput label,
     .stSelectbox label {
-        font-size: 20px !important;
-        font-weight: 800 !important;
-        color: #0F172A !important;
+        font-size: 19px !important;
+        font-weight: 700 !important;
+        color: #E2E8F0 !important;
         margin-bottom: 8px !important;
     }
 
-    /* CAJAS DE ENTRADA BLANCAS CON TEXTO OSCURO */
-    div[data-baseweb="input"], 
-    div[data-baseweb="input"] > div,
-    input {
-        background-color: #FFFFFF !important;
-        color: #0F172A !important;
+    /* Cajas de texto de alta legibilidad en modo oscuro */
+    div[data-baseweb="input"] {
+        background-color: #1A202C !important;
+        border: 2px solid #4A5568 !important;
         border-radius: 8px !important;
     }
 
-    div[data-baseweb="input"] {
-        border: 2px solid #63B3ED !important;
+    div[data-baseweb="input"] input {
+        color: #FFFFFF !important;
+        font-size: 17px !important;
+        background-color: transparent !important;
     }
 
-    /* 6. TEXTO EN BARRA LATERAL */
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] span,
-    section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] div {
-        color: #F1F5F9 !important;
-    }
-
+    /* 4. MENÚ DE LA BARRA LATERAL (OPCIONES DE NAVEGACIÓN) */
     .sidebar-header {
         font-size: 14px !important;
         font-weight: 800 !important;
-        color: #94A3B8 !important;
+        color: #A0AEC0 !important;
         text-transform: uppercase;
         letter-spacing: 1.2px;
-        margin-top: 20px;
+        margin-top: 15px;
         margin-bottom: 12px;
     }
 
     section[data-testid="stSidebar"] .stRadio label {
         font-size: 18px !important;
         font-weight: 600 !important;
+        color: #EDF2F7 !important;
         padding: 10px 14px;
         border-radius: 8px;
     }
 
     .sidebar-footer {
-        background-color: #1E293B;
+        background-color: #14171D;
         padding: 16px;
         border-radius: 8px;
-        border: 1px solid #334155;
+        border: 1px solid #2D3748;
         font-size: 14px !important;
-        color: #CBD5E1 !important;
+        color: #A0AEC0 !important;
         margin-top: 40px;
     }
 
     .sidebar-footer * {
-        color: #CBD5E1 !important;
+        color: #A0AEC0 !important;
         font-size: 14px !important;
     }
 
-    /* 7. CONTENEDORES Y FORMULARIOS */
+    /* 5. TARJETAS Y CONTENEDORES OSCUROS */
     div[data-testid="stForm"] {
-        background-color: #FFFFFF !important;
-        border: 1px solid #90CDF4 !important;
+        background-color: #1E232A !important;
+        border: 1px solid #2D3748 !important;
         border-radius: 12px !important;
         padding: 28px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -206,7 +188,7 @@ with col2:
 
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
-# --- BARRA LATERAL ---
+# --- BARRA LATERAL FIJA ---
 with st.sidebar:
     st.markdown('<p class="sidebar-header">MENÚ DE NAVEGACIÓN</p>', unsafe_allow_html=True)
     
