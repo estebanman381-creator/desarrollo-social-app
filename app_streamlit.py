@@ -5,8 +5,8 @@ from supabase import create_client, Client
 from fpdf import FPDF
 
 # --- CONFIGURACIÓN DE CONTRASEÑAS ---
-CLAVE_TRABAJADORES = "trabajador123"
-CLAVE_DIRECTIVOS = "direccion2026"
+CLAVE_TRABAJADORES = "dsdatos"
+CLAVE_DIRECTIVOS = "dsloreto"
 
 st.set_page_config(
     page_title="Desarrollo Social - Loreto", 
@@ -58,7 +58,7 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
     
     return bytes(pdf.output())
 
-# --- ESTILOS CSS PERSONALIZADOS Y PALETA INSTITUCIONAL ---
+# --- ESTILOS CSS PERSONALIZADOS ---
 st.markdown("""
     <style>
     /* 1. OCULTAR HERRAMIENTAS DE DESARROLLO Y ELEMENTOS FLOTANTES */
@@ -71,77 +71,88 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. BARRA LATERAL FIJA Y PERMANENTE */
-    section[data-testid="stSidebar"] {
-        display: block !important;
+    /* 2. FLECHA DE APERTURA SIEMPRE VISIBLE ARRIBA A LA IZQUIERDA */
+    [data-testid="stSidebarCollapsedControl"] {
+        display: flex !important;
         visibility: visible !important;
-        width: 320px !important;
-        transform: none !important;
-        margin-left: 0 !important;
+        position: fixed !important;
+        top: 12px !important;
+        left: 12px !important;
+        z-index: 9999999 !important;
+        background-color: #0F172A !important;
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+        padding: 6px !important;
+    }
+
+    [data-testid="stSidebarCollapsedControl"] button,
+    [data-testid="stSidebarCollapsedControl"] svg {
+        fill: #FFFFFF !important;
+        color: #FFFFFF !important;
+    }
+
+    /* 3. FONDO CELESTE MÁS DEFINIDO E INSTITUCIONAL */
+    .stApp {
+        background-color: #DCEEFB !important;
+    }
+
+    /* 4. PALETA AZUL SLATE PROFUNDO PARA LA BARRA LATERAL */
+    section[data-testid="stSidebar"] {
         background-color: #0F172A !important;
         border-right: 1px solid #1E293B;
     }
 
-    [data-testid="stSidebarCollapsedControl"],
-    button[aria-label="Collapse sidebar"],
-    button[aria-label="Close sidebar"],
-    button[aria-label="Expand sidebar"] {
-        display: none !important;
-        visibility: hidden !important;
-    }
-
-    /* 3. FONDO CELESTE/AZUL CLARO INSTITUCIONAL */
-    .stApp {
-        background-color: #EBF8FF !important;
-    }
-
-    /* 4. AGRANDAR TIPOGRAFÍA Y AUMENTAR LEGIBILIDAD */
-    html, body, [class*="css"], p, span, div {
+    /* 5. TIPOGRAFÍA Y TAMAÑO DE FUENTE ENCABEZADOS Y TEXTOS */
+    html, body, p, span, div {
         font-size: 17px !important;
         color: #0F172A !important;
     }
 
-    /* Títulos principales y subtítulos */
-    h1 {
-        font-size: 32px !important;
+    /* Título principal más grande */
+    h1, .stTitle {
+        font-size: 40px !important;
+        font-weight: 900 !important;
+        color: #0F172A !important;
+        letter-spacing: -0.5px !important;
+    }
+
+    /* Subtítulos más grandes */
+    h2, h3, .stSubheader {
+        font-size: 28px !important;
         font-weight: 800 !important;
         color: #0F172A !important;
+        margin-top: 15px !important;
+        margin-bottom: 15px !important;
     }
 
-    h2, h3, .stSubheader {
-        font-size: 24px !important;
-        font-weight: 700 !important;
-        color: #0F172A !important;
-    }
-
-    /* Etiquetas de cajas de texto y campos de selección */
+    /* Etiquetas de los formularios (Ingrese la contraseña...) */
     [data-testid="stWidgetLabel"] label,
     .stTextInput label,
     .stSelectbox label {
-        font-size: 19px !important;
+        font-size: 20px !important;
         font-weight: 800 !important;
         color: #0F172A !important;
         margin-bottom: 8px !important;
     }
 
-    /* Inputs y áreas donde se escribe */
-    div[data-baseweb="input"] {
+    /* CAJAS DE ENTRADA BLANCAS CON TEXTO OSCURO */
+    div[data-baseweb="input"], 
+    div[data-baseweb="input"] > div,
+    input {
         background-color: #FFFFFF !important;
-        border: 2px solid #90CDF4 !important;
+        color: #0F172A !important;
         border-radius: 8px !important;
     }
 
-    div[data-baseweb="input"] input {
-        color: #0F172A !important;
-        font-size: 17px !important;
-        background-color: #FFFFFF !important;
+    div[data-baseweb="input"] {
+        border: 2px solid #63B3ED !important;
     }
 
-    /* 5. TEXTOS EN BARRA LATERAL (AZUL SLATE PROFUNDO) */
-    [data-testid="stSidebar"] label,
-    [data-testid="stSidebar"] span,
-    [data-testid="stSidebar"] p,
-    [data-testid="stSidebar"] div {
+    /* 6. TEXTO EN BARRA LATERAL */
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] div {
         color: #F1F5F9 !important;
     }
 
@@ -155,7 +166,7 @@ st.markdown("""
         margin-bottom: 12px;
     }
 
-    [data-testid="stSidebar"] .stRadio label {
+    section[data-testid="stSidebar"] .stRadio label {
         font-size: 18px !important;
         font-weight: 600 !important;
         padding: 10px 14px;
@@ -177,13 +188,13 @@ st.markdown("""
         font-size: 14px !important;
     }
 
-    /* 6. ESTILO DE FORMULARIOS Y CONTENEDORES */
+    /* 7. CONTENEDORES Y FORMULARIOS */
     div[data-testid="stForm"] {
         background-color: #FFFFFF !important;
-        border: 1px solid #BEE3F8 !important;
+        border: 1px solid #90CDF4 !important;
         border-radius: 12px !important;
         padding: 28px !important;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -195,7 +206,7 @@ with col2:
 
 st.title("📋 Sistema de Gestión - Desarrollo Social")
 
-# --- BARRA LATERAL FIJA ---
+# --- BARRA LATERAL ---
 with st.sidebar:
     st.markdown('<p class="sidebar-header">MENÚ DE NAVEGACIÓN</p>', unsafe_allow_html=True)
     
