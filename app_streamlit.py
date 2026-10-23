@@ -77,8 +77,8 @@ st.markdown("""
     section[data-testid="stSidebar"] {
         display: flex !important;
         visibility: visible !important;
-        width: 330px !important;
-        min-width: 330px !important;
+        width: 350px !important;
+        min-width: 350px !important;
         position: relative !important;
         transform: none !important;
         margin-left: 0 !important;
@@ -114,13 +114,16 @@ st.markdown("""
         color: #F7FAFC !important;
     }
 
-    /* Etiquetas de los campos (Ingrese la contraseña...) */
+    /* ETIQUETAS DE CAMPOS (FORZADO CON SELECTORES DIRECTOS Y PARÁGRAFOS) */
+    [data-testid="stWidgetLabel"] p,
     [data-testid="stWidgetLabel"] label,
-    .stTextInput label,
-    .stSelectbox label {
-        font-size: 26px !important;
-        font-weight: 700 !important;
+    [data-testid="stWidgetLabel"] span,
+    .stTextInput label p,
+    .stSelectbox label p {
+        font-size: 24px !important;
+        font-weight: 800 !important;
         color: #E2E8F0 !important;
+        line-height: 1.3 !important;
         margin-bottom: 8px !important;
     }
 
@@ -133,13 +136,13 @@ st.markdown("""
 
     div[data-baseweb="input"] input {
         color: #FFFFFF !important;
-        font-size: 22px !important;
+        font-size: 20px !important;
         background-color: transparent !important;
     }
 
     /* 4. MENÚ DE LA BARRA LATERAL (OPCIONES DE NAVEGACIÓN) */
     .sidebar-header {
-        font-size: 14px !important;
+        font-size: 16px !important;
         font-weight: 800 !important;
         color: #A0AEC0 !important;
         text-transform: uppercase;
@@ -148,12 +151,13 @@ st.markdown("""
         margin-bottom: 12px;
     }
 
-    section[data-testid="stSidebar"] .stRadio label {
-        font-size: 26px !important;
-        font-weight: 600 !important;
+    /* OPCIONES DEL MENÚ LATERAL (FORZADO CON SELECTORES DIRECTOS) */
+    section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+    section[data-testid="stSidebar"] .stRadio label p,
+    section[data-testid="stSidebar"] .stRadio div {
+        font-size: 22px !important;
+        font-weight: 700 !important;
         color: #EDF2F7 !important;
-        padding: 10px 14px;
-        border-radius: 8px;
     }
 
     .sidebar-footer {
