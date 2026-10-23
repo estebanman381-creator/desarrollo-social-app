@@ -114,14 +114,14 @@ st.markdown("""
         color: #F7FAFC !important;
     }
 
-    /* ETIQUETAS DE CAMPOS (FORZADO CON SELECTORES DIRECTOS Y PARÁGRAFOS) */
+    /* ETIQUETAS DE CAMPOS (TAMAÑO GRANDE, SIN NEGRITA) */
     [data-testid="stWidgetLabel"] p,
     [data-testid="stWidgetLabel"] label,
     [data-testid="stWidgetLabel"] span,
     .stTextInput label p,
     .stSelectbox label p {
-        font-size: 20px !important;
-        font-weight: 800 !important;
+        font-size: 24px !important;
+        font-weight: 400 !important; /* Normal (Sin negrita) */
         color: #E2E8F0 !important;
         line-height: 1.3 !important;
         margin-bottom: 8px !important;
@@ -137,6 +137,7 @@ st.markdown("""
     div[data-baseweb="input"] input {
         color: #FFFFFF !important;
         font-size: 20px !important;
+        font-weight: 400 !important;
         background-color: transparent !important;
     }
 
@@ -151,12 +152,12 @@ st.markdown("""
         margin-bottom: 12px;
     }
 
-    /* OPCIONES DEL MENÚ LATERAL (FORZADO CON SELECTORES DIRECTOS) */
+    /* OPCIONES DEL MENÚ LATERAL (TAMAÑO GRANDE, SIN NEGRITA) */
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] .stRadio label p,
     section[data-testid="stSidebar"] .stRadio div {
-        font-size: 20px !important;
-        font-weight: 700 !important;
+        font-size: 22px !important;
+        font-weight: 400 !important; /* Normal (Sin negrita) */
         color: #EDF2F7 !important;
     }
 
