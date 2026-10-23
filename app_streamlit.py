@@ -120,7 +120,7 @@ st.markdown("""
     [data-testid="stWidgetLabel"] span,
     .stTextInput label p,
     .stSelectbox label p {
-        font-size: 24px !important;
+        font-size: 20px !important;
         font-weight: 800 !important;
         color: #E2E8F0 !important;
         line-height: 1.3 !important;
@@ -155,7 +155,7 @@ st.markdown("""
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] .stRadio label p,
     section[data-testid="stSidebar"] .stRadio div {
-        font-size: 22px !important;
+        font-size: 20px !important;
         font-weight: 700 !important;
         color: #EDF2F7 !important;
     }
