@@ -120,7 +120,7 @@ st.markdown("""
     [data-testid="stWidgetLabel"] span,
     .stTextInput label p,
     .stSelectbox label p {
-        font-size: 24px !important;
+        font-size: 22px !important;
         font-weight: 400 !important; /* Normal (Sin negrita) */
         color: #E2E8F0 !important;
         line-height: 1.3 !important;
@@ -143,7 +143,7 @@ st.markdown("""
     div[data-baseweb="select"] div,
     .stSelectbox div[role="button"] {
         color: #FFFFFF !important;
-        font-size: 20px !important; /* Texto ingresado a 26px */
+        font-size: 18px !important; /* Texto ingresado a 26px */
         font-weight: 500 !important;
         background-color: transparent !important;
     }
@@ -163,7 +163,7 @@ st.markdown("""
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] .stRadio label p,
     section[data-testid="stSidebar"] .stRadio div {
-        font-size: 20px !important;
+        font-size: 18px !important;
         font-weight: 400 !important; /* Normal (Sin negrita) */
         color: #EDF2F7 !important;
     }
