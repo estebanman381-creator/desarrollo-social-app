@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime
+import zoneinfo  # Incluido nativamente en Python 3.9+
 import pandas as pd
 from supabase import create_client, Client
 from fpdf import FPDF
@@ -117,7 +118,7 @@ st.markdown("""
     [data-testid="stWidgetLabel"] label,
     .stTextInput label,
     .stSelectbox label {
-        font-size: 19px !important;
+        font-size: 22px !important;
         font-weight: 700 !important;
         color: #E2E8F0 !important;
         margin-bottom: 8px !important;
@@ -132,7 +133,7 @@ st.markdown("""
 
     div[data-baseweb="input"] input {
         color: #FFFFFF !important;
-        font-size: 17px !important;
+        font-size: 22px !important;
         background-color: transparent !important;
     }
 
@@ -266,7 +267,9 @@ if opcion == "✍️ Cargar Ayuda Directa":
                         "direccion": direccion
                     }).execute()
                     
-                    fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M")
+                    # Obtiene la fecha y hora exacta de Argentina (UTC-3)
+                    zona_horaria = zoneinfo.ZoneInfo("America/Argentina/Buenos_Aires")
+                    fecha_actual = datetime.now(zona_horaria).strftime("%Y-%m-%d %H:%M")
                     supabase.table("entregas").insert({
                         "dni_persona": dni,
                         "fecha": fecha_actual,
