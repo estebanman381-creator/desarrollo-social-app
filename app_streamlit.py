@@ -118,7 +118,7 @@ st.markdown("""
     [data-testid="stWidgetLabel"] label,
     .stTextInput label,
     .stSelectbox label {
-        font-size: 24px !important;
+        font-size: 26px !important;
         font-weight: 700 !important;
         color: #E2E8F0 !important;
         margin-bottom: 8px !important;
@@ -139,7 +139,7 @@ st.markdown("""
 
     /* 4. MENÚ DE LA BARRA LATERAL (OPCIONES DE NAVEGACIÓN) */
     .sidebar-header {
-        font-size: 20px !important;
+        font-size: 14px !important;
         font-weight: 800 !important;
         color: #A0AEC0 !important;
         text-transform: uppercase;
@@ -149,7 +149,7 @@ st.markdown("""
     }
 
     section[data-testid="stSidebar"] .stRadio label {
-        font-size: 20px !important;
+        font-size: 26px !important;
         font-weight: 600 !important;
         color: #EDF2F7 !important;
         padding: 10px 14px;
@@ -161,14 +161,14 @@ st.markdown("""
         padding: 16px;
         border-radius: 8px;
         border: 1px solid #2D3748;
-        font-size: 20px !important;
+        font-size: 14px !important;
         color: #A0AEC0 !important;
         margin-top: 40px;
     }
 
     .sidebar-footer * {
         color: #A0AEC0 !important;
-        font-size: 20px !important;
+        font-size: 14px !important;
     }
 
     /* 5. TARJETAS Y CONTENEDORES OSCUROS */
