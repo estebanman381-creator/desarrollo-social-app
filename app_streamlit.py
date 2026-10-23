@@ -127,20 +127,24 @@ st.markdown("""
         margin-bottom: 8px !important;
     }
 
-    /* CAJAS DE TEXTO E INPUTS (TEXTO INGRESADO Y SELECCIONADO MÁS GRANDE) */
+    /* CAJAS DE TEXTO E INPUTS (FORZAR TEXTO QUE ESCRIBE EL USUARIO) */
     div[data-baseweb="input"],
     div[data-baseweb="select"] {
         background-color: #1A202C !important;
         border: 2px solid #4A5568 !important;
         border-radius: 8px !important;
+        min-height: 50px !important; /* Más altura a la caja */
     }
 
+    /* Selector directo para el texto tipeado dentro del input */
+    input[data-testid="stTextInputBase"],
     div[data-baseweb="input"] input,
+    .stTextInput input,
     div[data-baseweb="select"] div,
     .stSelectbox div[role="button"] {
         color: #FFFFFF !important;
-        font-size: 22px !important; /* Aumentado a 22px */
-        font-weight: 400 !important;
+        font-size: 20px !important; /* Texto ingresado a 26px */
+        font-weight: 500 !important;
         background-color: transparent !important;
     }
 
@@ -159,7 +163,7 @@ st.markdown("""
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] .stRadio label p,
     section[data-testid="stSidebar"] .stRadio div {
-        font-size: 22px !important;
+        font-size: 20px !important;
         font-weight: 400 !important; /* Normal (Sin negrita) */
         color: #EDF2F7 !important;
     }
