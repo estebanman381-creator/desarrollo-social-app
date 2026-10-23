@@ -127,16 +127,19 @@ st.markdown("""
         margin-bottom: 8px !important;
     }
 
-    /* Cajas de texto de alta legibilidad en modo oscuro */
-    div[data-baseweb="input"] {
+    /* CAJAS DE TEXTO E INPUTS (TEXTO INGRESADO Y SELECCIONADO MÁS GRANDE) */
+    div[data-baseweb="input"],
+    div[data-baseweb="select"] {
         background-color: #1A202C !important;
         border: 2px solid #4A5568 !important;
         border-radius: 8px !important;
     }
 
-    div[data-baseweb="input"] input {
+    div[data-baseweb="input"] input,
+    div[data-baseweb="select"] div,
+    .stSelectbox div[role="button"] {
         color: #FFFFFF !important;
-        font-size: 20px !important;
+        font-size: 22px !important; /* Aumentado a 22px */
         font-weight: 400 !important;
         background-color: transparent !important;
     }
