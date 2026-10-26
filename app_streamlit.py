@@ -60,7 +60,7 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
     
     return bytes(pdf.output())
 
-# --- ESTILOS CSS PERSONALIZADOS (TEMA OSCURO PROGRESIVO) ---
+# --- ESTILOS CSS PERSONALIZADOS (ALTO CONTRASTE) ---
 st.markdown("""
     <style>
     /* 1. OCULTAR ELEMENTOS ADMINISTRATIVOS DE STREAMLIT */
@@ -73,7 +73,7 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. FORZAR BARRA LATERAL FIJA Y PERMANENTE (NUNCA SE COLAPSA) */
+    /* 2. BARRA LATERAL FIJA Y PERMANENTE */
     section[data-testid="stSidebar"] {
         display: flex !important;
         visibility: visible !important;
@@ -86,7 +86,6 @@ st.markdown("""
         border-right: 1px solid #2D3748 !important;
     }
 
-    /* Ocultar cualquier botón para colapsar/cerrar la barra */
     [data-testid="stSidebarCollapsedControl"],
     button[aria-label="Collapse sidebar"],
     button[aria-label="Close sidebar"],
@@ -95,13 +94,12 @@ st.markdown("""
         visibility: hidden !important;
     }
 
-    /* 3. FONDO OSCURO PRINCIPAL Y TEXTO CLARO EN LA APLICACIÓN */
+    /* 3. FONDO OSCURO PRINCIPAL Y TEXTOS */
     .stApp {
         background-color: #0E1117 !important;
         color: #E2E8F0 !important;
     }
 
-    /* Títulos principales y subtítulos más grandes */
     h1, .stTitle {
         font-size: 38px !important;
         font-weight: 800 !important;
@@ -114,41 +112,55 @@ st.markdown("""
         color: #F7FAFC !important;
     }
 
-    /* ETIQUETAS DE CAMPOS (TAMAÑO GRANDE, SIN NEGRITA) */
+    /* ETIQUETAS DE CAMPOS (NOMBRES DE CADA CAMPO) */
     [data-testid="stWidgetLabel"] p,
     [data-testid="stWidgetLabel"] label,
     [data-testid="stWidgetLabel"] span,
     .stTextInput label p,
     .stSelectbox label p {
-        font-size: 20px !important;
-        font-weight: 400 !important; /* Normal (Sin negrita) */
+        font-size: 24px !important;
+        font-weight: 400 !important;
         color: #E2E8F0 !important;
         line-height: 1.3 !important;
         margin-bottom: 8px !important;
     }
 
-    /* CAJAS DE TEXTO E INPUTS (FORZAR TEXTO QUE ESCRIBE EL USUARIO) */
+    /* CAJAS DE ENTRADA Y SELECTBOX (MAYOR CONTRASTE VISUAL) */
     div[data-baseweb="input"],
     div[data-baseweb="select"] {
-        background-color: #1A202C !important;
-        border: 2px solid #4A5568 !important;
+        background-color: #252D3A !important; /* Fondo más claro que resalta */
+        border: 2px solid #64748B !important; /* Borde visible y definido */
         border-radius: 8px !important;
-        min-height: 50px !important; /* Más altura a la caja */
+        min-height: 52px !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4) !important;
     }
 
-    /* Selector directo para el texto tipeado dentro del input */
+    /* EFECTO HOVER EN LAS CAJAS */
+    div[data-baseweb="input"]:hover,
+    div[data-baseweb="select"]:hover {
+        border-color: #38BDF8 !important; /* Borde celeste al pasar el cursor */
+    }
+
+    /* TEXTO INGRESADO Y OPCIÓN SELECCIONADA EN DESPLEGABLE */
     input[data-testid="stTextInputBase"],
     div[data-baseweb="input"] input,
     .stTextInput input,
     div[data-baseweb="select"] div,
     .stSelectbox div[role="button"] {
         color: #FFFFFF !important;
-        font-size: 18px !important; /* Texto ingresado a 26px */
+        font-size: 22px !important;
         font-weight: 500 !important;
         background-color: transparent !important;
     }
 
-    /* 4. MENÚ DE LA BARRA LATERAL (OPCIONES DE NAVEGACIÓN) */
+    /* RESALTAR FLECHA DEL CAMPO DESPLEGABLE (SELECTBOX) */
+    div[data-baseweb="select"] svg {
+        fill: #FFFFFF !important;
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    /* 4. MENÚ LATERAL */
     .sidebar-header {
         font-size: 16px !important;
         font-weight: 800 !important;
@@ -159,12 +171,11 @@ st.markdown("""
         margin-bottom: 12px;
     }
 
-    /* OPCIONES DEL MENÚ LATERAL (TAMAÑO GRANDE, SIN NEGRITA) */
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] .stRadio label p,
     section[data-testid="stSidebar"] .stRadio div {
-        font-size: 18px !important;
-        font-weight: 400 !important; /* Normal (Sin negrita) */
+        font-size: 22px !important;
+        font-weight: 400 !important;
         color: #EDF2F7 !important;
     }
 
@@ -183,13 +194,13 @@ st.markdown("""
         font-size: 14px !important;
     }
 
-    /* 5. TARJETAS Y CONTENEDORES OSCUROS */
+    /* 5. TARJETA CONTENEDORA PRINCIPAL */
     div[data-testid="stForm"] {
-        background-color: #1E232A !important;
-        border: 1px solid #2D3748 !important;
+        background-color: #161B22 !important;
+        border: 1px solid #30363D !important;
         border-radius: 12px !important;
         padding: 28px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -358,7 +369,12 @@ elif opcion == "📊 Dashboard & Estadísticas":
     if pass_dash == CLAVE_DIRECTIVOS:
         st.success("Acceso concedido a Métricas")
         
-        resp = supabase.table("entregas").select("*").execute()
+        # Consulta en caché para optimizar velocidad
+        @st.cache_data(ttl=120)
+        def obtener_entregas_cache():
+            return supabase.table("entregas").select("*").execute()
+            
+        resp = obtener_entregas_cache()
         
         if resp.data:
             df = pd.DataFrame(resp.data)
