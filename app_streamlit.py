@@ -60,7 +60,7 @@ def generar_pdf(nombre, apellido, dni, direccion, tipo_ayuda, descripcion, fecha
     
     return bytes(pdf.output())
 
-# --- ESTILOS CSS PERSONALIZADOS (ALTO CONTRASTE) ---
+# --- ESTILOS CSS PERSONALIZADOS (PROFESIONAL / EQUILIBRADO) ---
 st.markdown("""
     <style>
     /* 1. OCULTAR ELEMENTOS ADMINISTRATIVOS DE STREAMLIT */
@@ -73,17 +73,17 @@ st.markdown("""
     iframe[title="streamlit_badge"] { display: none !important; }
     div[data-testid="stDecoration"] { display: none !important; }
 
-    /* 2. BARRA LATERAL FIJA Y PERMANENTE */
+    /* 2. BARRA LATERAL PERMANENTE */
     section[data-testid="stSidebar"] {
         display: flex !important;
         visibility: visible !important;
-        width: 350px !important;
-        min-width: 350px !important;
+        width: 300px !important;
+        min-width: 300px !important;
         position: relative !important;
         transform: none !important;
         margin-left: 0 !important;
-        background-color: #1E232A !important;
-        border-right: 1px solid #2D3748 !important;
+        background-color: #0F172A !important;
+        border-right: 1px solid #1E293B !important;
     }
 
     [data-testid="stSidebarCollapsedControl"],
@@ -94,113 +94,109 @@ st.markdown("""
         visibility: hidden !important;
     }
 
-    /* 3. FONDO OSCURO PRINCIPAL Y TEXTOS */
+    /* 3. FONDO PRINCIPAL Y TIPOGRAFÍAS */
     .stApp {
-        background-color: #0E1117 !important;
-        color: #E2E8F0 !important;
+        background-color: #0B0F17 !important;
+        color: #F1F5F9 !important;
     }
 
     h1, .stTitle {
-        font-size: 38px !important;
-        font-weight: 800 !important;
+        font-size: 30px !important;
+        font-weight: 700 !important;
         color: #FFFFFF !important;
     }
 
     h2, h3, .stSubheader {
-        font-size: 26px !important;
-        font-weight: 700 !important;
-        color: #F7FAFC !important;
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        color: #F8FAFC !important;
     }
 
-    /* ETIQUETAS DE CAMPOS (NOMBRES DE CADA CAMPO) */
+    /* ETIQUETAS DE LOS CAMPOS (MÁS PEQUEÑAS Y ELEGANTES) */
     [data-testid="stWidgetLabel"] p,
     [data-testid="stWidgetLabel"] label,
     [data-testid="stWidgetLabel"] span,
     .stTextInput label p,
     .stSelectbox label p {
-        font-size: 24px !important;
-        font-weight: 400 !important;
-        color: #E2E8F0 !important;
-        line-height: 1.3 !important;
-        margin-bottom: 8px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #CBD5E1 !important;
+        line-height: 1.2 !important;
+        margin-bottom: 6px !important;
     }
 
-    /* CAJAS DE ENTRADA Y SELECTBOX (MAYOR CONTRASTE VISUAL) */
+    /* CAJAS DE TEXTO Y DESPLEGABLES CON ALTO CONTRASTE */
     div[data-baseweb="input"],
     div[data-baseweb="select"] {
-        background-color: #252D3A !important; /* Fondo más claro que resalta */
-        border: 2px solid #64748B !important; /* Borde visible y definido */
-        border-radius: 8px !important;
-        min-height: 52px !important;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+        background-color: #1E293B !important; /* Fondo diferenciado */
+        border: 1px solid #475569 !important; /* Borde bien definido */
+        border-radius: 6px !important;
+        min-height: 42px !important;
     }
 
-    /* EFECTO HOVER EN LAS CAJAS */
-    div[data-baseweb="input"]:hover,
-    div[data-baseweb="select"]:hover {
-        border-color: #38BDF8 !important; /* Borde celeste al pasar el cursor */
+    div[data-baseweb="input"]:focus-within,
+    div[data-baseweb="select"]:focus-within {
+        border-color: #38BDF8 !important; /* Enfoque celeste sutil */
     }
 
-    /* TEXTO INGRESADO Y OPCIÓN SELECCIONADA EN DESPLEGABLE */
+    /* TEXTO QUE ESCRIBE O SELECCIONA EL USUARIO */
     input[data-testid="stTextInputBase"],
     div[data-baseweb="input"] input,
     .stTextInput input,
     div[data-baseweb="select"] div,
     .stSelectbox div[role="button"] {
         color: #FFFFFF !important;
-        font-size: 22px !important;
-        font-weight: 500 !important;
+        font-size: 16px !important;
+        font-weight: 400 !important;
         background-color: transparent !important;
     }
 
-    /* RESALTAR FLECHA DEL CAMPO DESPLEGABLE (SELECTBOX) */
+    /* FLECHA DEL DESPLEGABLE */
     div[data-baseweb="select"] svg {
-        fill: #FFFFFF !important;
-        width: 24px !important;
-        height: 24px !important;
+        fill: #94A3B8 !important;
     }
 
-    /* 4. MENÚ LATERAL */
+    /* 4. MENÚ LATERAL (TAMAÑO ADECUADO) */
     .sidebar-header {
-        font-size: 16px !important;
-        font-weight: 800 !important;
-        color: #A0AEC0 !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #64748B !important;
         text-transform: uppercase;
-        letter-spacing: 1.2px;
-        margin-top: 15px;
-        margin-bottom: 12px;
+        letter-spacing: 1px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
     section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
     section[data-testid="stSidebar"] .stRadio label p,
     section[data-testid="stSidebar"] .stRadio div {
-        font-size: 22px !important;
-        font-weight: 400 !important;
-        color: #EDF2F7 !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        color: #E2E8F0 !important;
     }
 
     .sidebar-footer {
-        background-color: #14171D;
-        padding: 16px;
+        background-color: #020617;
+        padding: 14px;
         border-radius: 8px;
-        border: 1px solid #2D3748;
-        font-size: 14px !important;
-        color: #A0AEC0 !important;
-        margin-top: 40px;
+        border: 1px solid #1E293B;
+        font-size: 13px !important;
+        color: #94A3B8 !important;
+        margin-top: 30px;
     }
 
     .sidebar-footer * {
-        color: #A0AEC0 !important;
-        font-size: 14px !important;
+        color: #94A3B8 !important;
+        font-size: 13px !important;
     }
 
-    /* 5. TARJETA CONTENEDORA PRINCIPAL */
+    /* 5. TARJETA DEL FORMULARIO */
     div[data-testid="stForm"] {
-        background-color: #161B22 !important;
-        border: 1px solid #30363D !important;
-        border-radius: 12px !important;
-        padding: 28px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+        background-color: #111827 !important;
+        border: 1px solid #1F2937 !important;
+        border-radius: 10px !important;
+        padding: 24px !important;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -369,7 +365,6 @@ elif opcion == "📊 Dashboard & Estadísticas":
     if pass_dash == CLAVE_DIRECTIVOS:
         st.success("Acceso concedido a Métricas")
         
-        # Consulta en caché para optimizar velocidad
         @st.cache_data(ttl=120)
         def obtener_entregas_cache():
             return supabase.table("entregas").select("*").execute()
