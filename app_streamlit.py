@@ -120,7 +120,7 @@ st.markdown("""
     [data-testid="stWidgetLabel"] span,
     .stTextInput label p,
     .stSelectbox label p {
-        font-size: 22px !important;
+        font-size: 20px !important;
         font-weight: 400 !important; /* Normal (Sin negrita) */
         color: #E2E8F0 !important;
         line-height: 1.3 !important;
